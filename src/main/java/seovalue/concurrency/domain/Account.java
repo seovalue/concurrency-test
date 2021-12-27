@@ -47,7 +47,8 @@ public class Account {
     }
 
     public void updateAtomicBalance(long amount) {
-        atomicBalance.addAndGet(amount);
+        long nowValue = atomicBalance.get();
+        boolean b = atomicBalance.compareAndSet(nowValue, nowValue + amount);
     }
 
 }

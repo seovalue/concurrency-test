@@ -52,7 +52,7 @@ class AccountServiceTest {
         // then
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(AccountNotFoundException::new);
-        assertThat(account.getBalance()).isEqualTo(10 * 100);
+        assertThat(account.getBalance()).isEqualTo(1000 + 10 * 100);
     }
 
     @DisplayName("amount만큼의 돈을 입금한다. - AtomicLong 사용")
@@ -71,7 +71,7 @@ class AccountServiceTest {
         // then
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(AccountNotFoundException::new);
-        assertThat(account.getBalance()).isEqualTo(10 * 100);
+        assertThat(account.getAtomicBalance().get()).isEqualTo(1000 + 10 * 100);
     }
 
     @DisplayName("amount만큼의 돈을 입금한다. - Long 사용, PESSIMISTIC_READ 걸려있는 경우")
@@ -90,7 +90,7 @@ class AccountServiceTest {
         // then
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(AccountNotFoundException::new);
-        assertThat(account.getBalance()).isEqualTo(10 * 100);
+        assertThat(account.getBalance()).isEqualTo(1000 + 10 * 100);
     }
 
     @DisplayName("amount만큼의 돈을 입금한다. - Long 사용, PESSIMISTIC_WRITE 걸려있는 경우")
@@ -109,6 +109,6 @@ class AccountServiceTest {
         // then
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(AccountNotFoundException::new);
-        assertThat(account.getBalance()).isEqualTo(10 * 100);
+        assertThat(account.getBalance()).isEqualTo(1000 + 10 * 100);
     }
 }

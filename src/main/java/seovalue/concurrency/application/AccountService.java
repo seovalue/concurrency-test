@@ -6,6 +6,8 @@ import seovalue.concurrency.domain.Account;
 import seovalue.concurrency.domain.AccountRepository;
 import seovalue.concurrency.exception.AccountNotFoundException;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 @Service
 @Transactional(readOnly = true)
 public class AccountService {
@@ -20,6 +22,7 @@ public class AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(AccountNotFoundException::new);
         Long currentBalance = account.getBalance();
+        System.out.println("currentBalance --> " + currentBalance);
         account.updateBalance(amount);
         return currentBalance + amount;
     }
@@ -29,6 +32,7 @@ public class AccountService {
         Account account = accountRepository.findByIdWithPessimisticRead(accountId)
                 .orElseThrow(AccountNotFoundException::new);
         Long currentBalance = account.getBalance();
+        System.out.println("currentBalance --> " + currentBalance);
         account.updateBalance(amount);
         return currentBalance + amount;
     }
@@ -38,6 +42,7 @@ public class AccountService {
         Account account = accountRepository.findByIdWithPessimisticWrite(accountId)
                 .orElseThrow(AccountNotFoundException::new);
         Long currentBalance = account.getBalance();
+        System.out.println("currentBalance --> " + currentBalance);
         account.updateBalance(amount);
         return currentBalance + amount;
     }
@@ -46,8 +51,9 @@ public class AccountService {
     public long depositWhenAtomic(long accountId, long amount) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(AccountNotFoundException::new);
-        Long currentBalance = account.getBalance();
+        AtomicLong currentBalance = account.getAtomicBalance();
+        System.out.println("currentBalance --> " + currentBalance);
         account.updateAtomicBalance(amount);
-        return currentBalance + amount;
+        return currentBalance.get() + amount;
     }
 }
